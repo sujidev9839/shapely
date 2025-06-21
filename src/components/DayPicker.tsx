@@ -129,13 +129,8 @@ function DayPicker() {
 
   if (!stateDate) return null;
 
-  const displayedDate = DateTime.fromJSDate(stateDate).setZone(timeZone).toFormat("dd MMM yyyy, hh:mm a ZZZ");
-
   return (
     <div className="book-cal-container">
-      <p className="mb-2 font-medium text-sm text-gray-600">
-        Selected Date (based on timezone): <span className="text-black">{displayedDate}</span>
-      </p>
 
       {loading ? (
         <Skeleton height={380} width={"100%"} borderRadius={8} />
