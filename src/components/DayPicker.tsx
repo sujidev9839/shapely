@@ -4,7 +4,7 @@ import {
   gql
 }
   from "@apollo/client";
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { parse } from 'date-fns'
 import { CallSchedulerContext } from '../context/CallSchedulerContext';
 import useAppointmentTypes from '../hooks/useAppointmentTypes';
@@ -102,12 +102,6 @@ useEffect(() => {
     }
 
     const startOfDay = luxonDate.startOf("day");
-
-    // Format it for logging (for visibility)
-    const formatted = startOfDay.toFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'ZZ (z)");
-    // console.log("🧪 Original Date String:", nextAvailableSlot.nextAvailableSlot);
-    // console.log("🌐 Time Zone:", timeZone);
-    // console.log("📅 Luxon Parsed:", formatted);
 
     // Convert to JS Date and store
     setStartDate(startOfDay.toJSDate() as any);
