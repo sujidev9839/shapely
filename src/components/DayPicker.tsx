@@ -4,7 +4,7 @@ import {
   gql
 }
   from "@apollo/client";
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { parse } from 'date-fns'
 import { CallSchedulerContext } from '../context/CallSchedulerContext';
 import useAppointmentTypes from '../hooks/useAppointmentTypes';
@@ -88,15 +88,31 @@ function DayPicker() {
     }
   })
 
-  useEffect(() => {
-    if (nextAvailableSlot?.nextAvailableSlot) {
-      const dateObj = new Date(nextAvailableSlot.nextAvailableSlot);
+useEffect(() => {
+  if (nextAvailableSlot?.nextAvailableSlot && timeZone) {
+    const luxonDate = DateTime.fromFormat(
+      nextAvailableSlot.nextAvailableSlot,
+      "yyyy-MM-dd",
+      { zone: timeZone }
+    );
 
-      if (!isNaN(dateObj.getTime())) {
-        setStartDate(dateObj as any);
-      }
+    if (!luxonDate.isValid) {
+      console.error("Invalid date format or value:", nextAvailableSlot.nextAvailableSlot);
+      return;
     }
-  }, [nextAvailableSlot?.nextAvailableSlot]);
+
+    const startOfDay = luxonDate.startOf("day");
+
+    // Format it for logging (for visibility)
+    const formatted = startOfDay.toFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'ZZ (z)");
+    // console.log("🧪 Original Date String:", nextAvailableSlot.nextAvailableSlot);
+    // console.log("🌐 Time Zone:", timeZone);
+    // console.log("📅 Luxon Parsed:", formatted);
+
+    // Convert to JS Date and store
+    setStartDate(startOfDay.toJSDate() as any);
+  }
+}, [nextAvailableSlot?.nextAvailableSlot, timeZone]);
 
   const highlightDates = useMemo(() => {
     return data?.daysAvailableForRange?.map((day: string) =>

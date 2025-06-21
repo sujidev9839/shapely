@@ -13,7 +13,7 @@ function CallScheduler() {
 
     const { step } = context;
     return (
-        <div className="mainContainer w-full text-2xl max-h-screen">
+        <div className="mainContainer w-full text-2xl">
             <img src={Logo} alt="Logo" className="h-8" />
             <div className="mt-4 text-start contentContainer w-[75%] mx-auto">
                 {step === "dateTime" && <DateTimeSelector />}

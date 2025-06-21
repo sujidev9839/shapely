@@ -9,9 +9,10 @@ import {
 }
     from "@apollo/client";
 import { addDays } from 'date-fns'
-import { format, toZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns-tz';
 import useAppointmentTypes from "../hooks/useAppointmentTypes";
 import Skeleton from "react-loading-skeleton";
+import { DateTime } from "luxon";
 
 const AVAILABLE_SLOTS_FOR_RANGE = gql`
   query availableSlotsForRange(
@@ -74,10 +75,9 @@ function AvailableSlots() {
     });
 
     function availableSlot(slot: any, index: number) {
-        const timeZone = timezone;
 
-        const zonedDate = toZonedTime(new Date(slot.date), timeZone);
-        const formattedTime = format(zonedDate, 'h:mm a', { timeZone });
+        const luxonTime = DateTime.fromFormat(slot.date, "yyyy-MM-dd HH:mm:ss ZZZ", { setZone: true });
+        const formattedTime = luxonTime.toFormat("h:mm a");
 
         return (
             <span
