@@ -74,10 +74,10 @@ function DayPicker() {
   const dateFromMonth = luxonDate.startOf("day").toFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'ZZ (z)");
 
   // Fetch available days
-  const { data, loading } = useQuery(DAYS_AVAILABLE_FOR_RANGE, {
+  const { data, refetch: refetchAvailableDays, loading } = useQuery(DAYS_AVAILABLE_FOR_RANGE, {
     variables: {
       org_level,
-      clients_can_join_waitlist: true,
+      clients_can_join_waitlist: false,
       date_from_month: stateDate ? dateFromMonth : "",
       timezone: timeZone,
       appt_type_id: appointmentType?.id,
@@ -88,15 +88,18 @@ function DayPicker() {
   });
 
   // Fetch next available slot
-  const { data: nextAvailableSlot } = useQuery(NEXT_AVAILABLE_SLOT, {
+  const {
+    data: nextAvailableSlot
+  } = useQuery(NEXT_AVAILABLE_SLOT, {
     variables: {
       provider_id,
       timezone: timeZone,
       org_level,
       appt_type_id: appointmentType?.id,
-      provider_ids: providerIds
-    }
+      provider_ids: providerIds,
+    },
   });
+  
 
   useEffect(() => {
     if (nextAvailableSlot?.nextAvailableSlot && timeZone) {
@@ -127,6 +130,25 @@ function DayPicker() {
     ) || [];
   }, [data]);
 
+  // fetch available days on month change
+  const handleMonthChange = (date: Date) => {
+    const luxonDate = DateTime.fromJSDate(date).setZone(timeZone);
+    const dateFromMonth = luxonDate.startOf("day").toFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'ZZ (z)");
+    setStartDate(date as any)
+  
+    // Refetch available days on month change
+    refetchAvailableDays({
+      org_level,
+      clients_can_join_waitlist: false,
+      date_from_month: dateFromMonth,
+      timezone: timeZone,
+      appt_type_id: appointmentType?.id,
+      provider_id,
+      contact_type: appointmentType?.available_contact_types[0],
+      provider_ids: providerIds
+    });
+  };
+
   if (!stateDate) return null;
 
   return (
@@ -140,6 +162,7 @@ function DayPicker() {
           onChange={(date: any) => setStartDate(date)}
           useWeekdaysShort={true}
           selected={stateDate}
+          onMonthChange={handleMonthChange}
           highlightDates={highlightDates}
         />
       )}

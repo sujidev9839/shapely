@@ -43,7 +43,7 @@ export const localStrings = {
         },
         {
             HEADING: "Complete the questionnaire and consent forms before your first visit.",
-            SUBHEADING: "This will allow for a smooth and easy visit with your shapely provider."
+            SUBHEADING: "This will allow for a smooth and easy visit with your Shapely provider."
         },
         {
             HEADING: "Get ready for your video visit!",
