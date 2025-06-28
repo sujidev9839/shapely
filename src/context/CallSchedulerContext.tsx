@@ -36,7 +36,7 @@ export const CallSchedulerProvider: React.FC<CallSchedulerProviderProps> = ({ ch
   const [stateDate, setStartDate] = useState<any>("");
   const [bookedAppointment, setBookedAppointment] = useState<any>();
   const [selectedSlots, setSelectedSlots] = useState<any>()
-  const [providerIds, setProviderIds] = useState<any>(["1857881", "2612119", "1857865"]);
+  const [providerIds, setProviderIds] = useState<any>([]);
   const [timezone, setTimezone] = useState({})
   const provider_id = searchParams.get("dietitian_id") ?? "";
   const org_level = searchParams.get("org_level") === "true";
@@ -47,31 +47,32 @@ export const CallSchedulerProvider: React.FC<CallSchedulerProviderProps> = ({ ch
   const phone_number = searchParams.get("phone_number") ?? "";
   const offering_id = searchParams.get("offering_id") ?? "";
 
-    // const fetchData = async () => {
-  //   const url = `https://www.zohoapis.com/crm/v7/functions/providersbystate/actions/execute?auth_type=apikey&zapikey=1003.8596bd6ff65623ac2d8f3e9bd767870a.13ffe7f211dacce8e0cece73de6c9a52&state=${state}`;
+    const fetchData = async () => {
+    const url = `https://zoho-solution-887781528.development.catalystserverless.com/server/zohocrm/providers/?state=${state}`;
 
-  //   try {
-  //     const response = await fetch(url, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-  //     const result = await response.json();
-  //     setProviderIds(result);
-  //   } catch (err) {
-  //     console.error("Fetch error:", err);
-  //   }
-  // };
+      const result = await response.json();
+      const stringIds = result?.output.map((id:number) => String(id));
+      setProviderIds(stringIds);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
   
   const handleSearch = async () => {
     if (!state) return;
