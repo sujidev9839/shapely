@@ -36,7 +36,7 @@ export const CallSchedulerProvider: React.FC<CallSchedulerProviderProps> = ({ ch
   const [stateDate, setStartDate] = useState<any>("");
   const [bookedAppointment, setBookedAppointment] = useState<any>();
   const [selectedSlots, setSelectedSlots] = useState<any>()
-  const [providerIds, setProviderIds] = useState<any>([]);
+  const [providerIds, setProviderIds] = useState<any>(["1857881", "2612119", "1857865"]);
   const [timezone, setTimezone] = useState({})
   const provider_id = searchParams.get("dietitian_id") ?? "";
   const org_level = searchParams.get("org_level") === "true";
