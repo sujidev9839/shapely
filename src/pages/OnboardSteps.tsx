@@ -91,7 +91,7 @@ function OnboardSteps() {
                     </div>
                 ))}
             </Card>
-            <ContactDetails className="contactInfo" />
+            <ContactDetails className="mobileView contactInfo" />
         </>
     )
 }
